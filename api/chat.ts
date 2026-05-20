@@ -10,7 +10,19 @@ const client = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
 });
 
+function setCors(res: any) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
 export default async function handler(req: any, res: any) {
+  setCors(res);
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -33,7 +45,7 @@ export default async function handler(req: any, res: any) {
       messages: [
         {
           role: 'system',
-          content: `You are DANH AI, a sharp, concise, helpful assistant for ${userName}. Sound natural, capable, and modern. Keep the tone clean and conversational, similar to a polished ChatGPT-style assistant.` ,
+          content: `You are DANH AI, a sharp, concise, helpful assistant for ${userName}. Sound natural, capable, and modern. Keep the tone clean and conversational, similar to a polished ChatGPT-style assistant.`,
         },
         ...messages,
       ],
